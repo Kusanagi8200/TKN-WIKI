@@ -1,0 +1,548 @@
+### THE KUZ NETWORK / KUZLAB - INFRASTRUCTURE (IN REVIEW)
+
+**Last updated:** 2025-10-25  
+[![TKN-SYNOPTIC-2026.jpg](https://wiki.kuzlab.org/uploads/images/gallery/2026-04/scaled-1680-/21atkn-synoptic-2026.jpg)](https://wiki.kuzlab.org/uploads/images/gallery/2026-04/21atkn-synoptic-2026.jpg)
+
+---
+
+### 1. Overview
+
+This page describes the current infrastructure of **THE KUZ NETWORK / KUZLAB**: servers, domains, public websites, internal tools, monitoring, project management, and the local LLM lab.
+
+### 1.1 Main nodes
+
+- **Two Debian VPS exposed to the Internet**
+  - **VPS 1 — Infomaniak (`83.228.192.116`)**  
+    Docker host / internal tooling / documentation / project management / monitoring / internal services.
+  - **VPS 2 — LWS (`91.234.194.49`)**  
+    Apache2 web front for public websites.
+- **One local LLM DUO lab**  
+  Not publicly exposed, dedicated to model testing, local orchestration, system prompts, conversational fine-tuning, and turn transcripts.
+
+### 1.2 Domains
+
+- **`kuzai.org`** → public portal, desktop/mobile variants, related web services
+- **`kuzlab.org`** → tooling, documentation, administration, monitoring
+
+---
+
+## 2. Components and roles
+
+## 2.1 Local LLM DUO Lab
+
+### Role
+
+The **Local LLM DUO Lab** is the local non-public R&D and LLM operations zone.  
+According to the synoptic, this zone is not just a single test workstation: it is a **local mini inference and orchestration chain** built around two nodes.
+
+### Logical topology
+
+- **SRV3 — LOCAL**
+  - local zone shown in the synoptic: **`192.168.0.0`**
+  - role: **LLM INFRA 1**
+  - visible building blocks:
+    - **Apache SRV + Proxy**
+    - **Virtual Host**
+    - **Orchestrator Python**
+    - **llama.cpp Engine**
+    - **KUZAI LLM Model**
+- **SRV4 — LOCAL**
+  - local zone shown in the synoptic: **`192.168.0.0`**
+  - role: **LLM INFRA 2**
+  - visible building blocks:
+    - **llama.cpp Engine**
+    - **DARKAI LLM Model**
+
+### Functional elements visible in the synoptic
+
+The **Local LLM DUO Lab** block feeds or exposes the following functions:
+
+- **Web-UI Management**
+- **Model System Prompt**
+- **Turns Fine Tuning**
+- **Turns Transcript**
+
+### Operating logic
+
+1. The local **Web-UI** drives the usage of the lab.
+2. The **Virtual Host** and **Apache proxy** on **SRV3** act as the local technical entry point.
+3. The **Python orchestrator** distributes workloads between the local engines.
+4. Inference is executed through **llama.cpp** on **SRV3** and **SRV4**.
+5. The **KUZAI LLM Model** is attached to **SRV3**.
+6. The **DARKAI LLM Model** is attached to **SRV4**.
+7. Operational outputs are structured around **system prompts**, **turns**, their **history**, and their **fine-tuning usage**.
+
+### Architecture positioning
+
+- **Exposure:** local only
+- **Primary role:** experimentation, orchestration, behavior validation, conversation handling, and technical operation of models
+- **Production impact:** isolated from the public front
+
+---
+
+## 2.2 Infomaniak VPS — `83.228.192.116`
+
+### Role
+
+Debian server hosting the **Docker base layer**, internal tooling, documentation, project management, and several monitoring / administration components.
+
+### Main services
+
+- **Portainer** — `https://docker.kuzlab.org`  
+  Docker administration: stacks, images, logs, deployments.
+
+- **n8n** — `https://n8n.kuzai.org`  
+  Workflow / harvesting / automation engine / web service feeder.
+
+- **Uptime-Kuma** — `https://uptime-kuma.kuzlab.org`  
+  HTTP/HTTPS monitoring, alerts, availability history.
+
+- **Wiki / BookStack** — `https://wiki.kuzlab.org`  
+  Central documentation: procedures, architecture, access, checklists.
+
+- **Kanboard** — `https://kan.kuzai.org  
+  Project management: kanban, backlog, progress tracking.
+
+### Services also visible in the synoptic
+
+The synoptic also shows, on the tooling / containers / monitoring side of the Infomaniak perimeter:
+
+- **BookStack container**
+- **Kanboard container**
+- **n8n container**
+- **Meili container**
+- **Uptime-Kuma container**
+- **Portainer container**
+- **Azuracast container**
+- **Checkmk**
+- **Metriks** (`metriks.kuzlab.org`)
+- **TKN Global Search**
+- **KuzFollow**
+
+### Operational purpose
+
+This VPS concentrates the **technical back office** of the ecosystem: documentation, project steering, automation, monitoring, document search, and container administration.
+
+---
+
+## 2.3 LWS VPS — `91.234.194.49`
+
+### Role
+
+Debian server exposing the **public Apache2 front** for Internet-facing websites.
+
+### Public websites
+
+- **`https://kuzai.org`**  
+  Universal AI Index — desktop experience.
+
+- **`https://mob.kuzai.org`**  
+  Universal AI Index — mobile experience.
+
+- **`https://first.kuzlab.org`**  
+  CNRS FIRST clone / reference site, according to the provided text block.
+
+### Reading notes
+
+The synoptic shows several vhosts / fronts on the LWS VPS:
+
+- `kuzai.org`
+- `mob.kuzai.org`
+- `first.kuzai.org`
+- `checkmk.kuzlab.org`
+
+In this version of the document:
+- **public FQDNs** are kept from the provided text block;
+- the **visible topology** from the synoptic is used to understand role separation between public front, tooling, and the Local LLM area.
+
+---
+
+## 2.4 Social / versioning
+
+- **GitHub (general)** — `https://github.com/kusanagi8200`
+- **GitHub (n8n)** — `https://github.com/KuzaiN8N`
+- **YouTube** — `https://www.youtube.com/@kuzai-org`
+- **X / Twitter** — `https://x.com/kuzai_org`
+
+Role: versioning of code, scripts, workflows, information publishing, and update distribution.
+
+---
+
+## 3. Overall logic
+
+## 3.1 Main flows
+
+1. **Code** and **technical content** are versioned on **GitHub**.
+2. **n8n** collects, transforms, or publishes flows useful to the ecosystem.
+3. **Public websites** are served by **Apache2** on the **LWS VPS**.
+4. **Uptime-Kuma** monitors the exposed FQDNs.
+5. **Wiki + Kanboard** form the documentation / project execution pair.
+6. The **Local LLM DUO Lab** remains isolated, local, and dedicated to LLM experimentation.
+
+## 3.2 Local LLM-specific chain
+
+```text
+Web-UI Management
+   ↓
+Apache SRV + Proxy (SRV3)
+   ↓
+Virtual Host (SRV3)
+   ↓
+Orchestrator Python (SRV3)
+   ├─→ llama.cpp Engine (SRV3) → KUZAI LLM Model
+   └─→ llama.cpp Engine (SRV4) → DARKAI LLM Model
+   ↓
+System Prompt / Turns / Fine Tuning / Transcript
+```
+
+---
+
+## 4. Server trees
+
+## 4.1 Infomaniak — `83.228.192.116`
+
+```text
+Infomaniak (Debian)
+├─ Apache2 (reverse / virtual host)
+└─ Docker Engine
+   ├─ Portainer                 → docker.kuzlab.org
+   ├─ n8n                       → n8n.kuzai.org
+   ├─ Uptime-Kuma               → uptime-kuma.kuzlab.org/dashboard
+   ├─ BookStack                 → wiki.kuzlab.org/login
+   ├─ Kanboard                  → kan.kuzai.org:9443
+   ├─ Meili / Search            → document search
+   └─ AzuraCast                 → radio / media flow
+```
+
+## 4.2 LWS — `91.234.194.49`
+
+```text
+LWS (Debian)
+└─ Apache2 (public front)
+   ├─ kuzai.org                 → Universal AI Index (Desktop)
+   ├─ mob.kuzai.org             → Universal AI Index (Mobile)
+   └─ first.kuzlab.org          → CNRS clone / FIRST reference site
+```
+
+## 4.3 Local LLM DUO Lab
+
+```text
+LOCAL LLM DUO LAB
+├─ SRV3 - LOCAL
+│  ├─ Local segment            → 192.168.0.0
+│  ├─ LLM INFRA 1
+│  ├─ Apache SRV + Proxy
+│  ├─ Virtual Host
+│  ├─ Orchestrator Python
+│  ├─ llama.cpp Engine
+│  └─ KUZAI LLM Model
+└─ SRV4 - LOCAL
+   ├─ Local segment            → 192.168.0.0
+   ├─ LLM INFRA 2
+   ├─ llama.cpp Engine
+   └─ DARKAI LLM Model
+```
+
+---
+
+## 5. DNS / addressing summary
+
+### 5.1 Public
+
+```text
+kuzai.org:
+  @ (apex)                  → 91.234.194.49
+  mob.kuzai.org          → 91.234.194.49
+  n8n.kuzai.org          → 83.228.192.116
+  kan.kuzai.org          → 83.228.192.116 (port 9443)
+  radio.kuzai.org        → 83.228.192.116
+
+kuzlab.org:
+  docker.kuzlab.org           → 83.228.192.116
+  uptime-kuma.kuzlab.org → 83.228.192.116
+  wiki.kuzlab.org                → 83.228.192.116
+  first.kuzlab.org               → 91.234.194.49
+
+```
+
+---
+
+## 6. Software summary table
+
+| Component | Host / IP | Endpoint | Main role | Main connections |
+|---|---|---|---|---|
+| Apache2 Web Front | VPS LWS — `91.234.194.49` | `kuzai.org`, `mob.kuzai.org`, `first.kuzlab.org` | Public web publishing | consumes content / deployments |
+| Docker Engine | VPS Infomaniak — `83.228.192.116` | — | Execution of containerized services | Portainer, n8n, BookStack, Uptime-Kuma, Kanboard, other containers |
+| Portainer | VPS Infomaniak — `83.228.192.116` | `docker.kuzlab.org` | Docker administration | controls the Docker engine |
+| n8n | VPS Infomaniak — `83.228.192.116` | `n8n.kuzai.org` | Automation / workflows / feeds | feeds the web ecosystem |
+| Uptime-Kuma | VPS Infomaniak — `83.228.192.116` | `uptime-kuma.kuzlab.org/dashboard` | Monitoring / alerting | probes public FQDNs |
+| BookStack | VPS Infomaniak — `83.228.192.116` | `wiki.kuzlab.org/login` | Documentation | linked to internal resources |
+| Kanboard | VPS Infomaniak — `83.228.192.116` | `kan.kuzai.org:9443` | Project management | used by teams, linked to documentation |
+| Local Apache + Proxy | SRV3 — Local | local only | technical entry point for the LLM lab | Web-UI, virtual host, orchestrator |
+| Orchestrator Python | SRV3 — Local | local only | orchestration of LLM runs | drives SRV3/SRV4 |
+| llama.cpp Engine #1 | SRV3 — Local | local only | local inference | runs the KUZAI model |
+| llama.cpp Engine #2 | SRV4 — Local | local only | local inference | runs the DARKAI model |
+| KUZAI LLM Model | SRV3 — Local | local only | local LLM model | used through llama.cpp |
+| DARKAI LLM Model | SRV4 — Local | local only | local LLM model | used through llama.cpp |
+| Web-UI Management | Local LLM Lab | local only | administration / usage interface | talks to proxy + orchestrator |
+| Turns / Transcript / Fine Tuning | Local LLM Lab | local only | operational memory and turn exploitation | depends on lab runs |
+| GitHub | External | `github.com/kusanagi8200`, `github.com/KuzaiN8N` | versioning | source for code / workflows |
+
+---
+
+## 7. Key update points retained
+
+- The **Local LLM** is no longer described as a single isolated workstation, but as a structured **DUO LAB** built around **SRV3** and **SRV4**.
+- **SRV3** is the central node: **proxy**, **virtual host**, **Python orchestrator**, **llama.cpp**, **KUZAI model**.
+- **SRV4** acts as the second inference node with **llama.cpp** and the **DARKAI model**.
+- The local lab explicitly manages functional objects such as **system prompts**, **turns**, **transcripts**, and **fine-tuning**.
+- The whole area remains **local only** and **outside public exposure**.
+
+##### **1) OVERVIEW**
+
+- **ONE LOCAL AI SERVER** (LLM TEST BENCH; NOT PUBLICLY EXPOSED)
+- **TWO DEBIAN VPS**
+  - **VPS 1 — INFOMANIAK (83.228.192.116)**: DOCKER HOST, INTERNAL TOOLING, DOCUMENTATION, PROJECT MANAGEMENT
+  - **VPS 2 — LWS (91.234.194.49)**: APACHE2 FRONT FOR PUBLIC WEBSITES
+
+**DOMAINS**
+- **KUZAI.ORG** → PUBLIC PORTAL + PRODUCT SUBDOMAINS
+- **KUZLAB.ORG** → INTERNAL TOOLING / INFRASTRUCTURE
+
+---
+
+##### **2) COMPONENTS & PURPOSES**
+
+##### **2.1 LOCAL SERVER — AI SERVER (LLM LAB)**
+- **PURPOSE:** MODEL LOADING, BENCHMARKING, RAG/AGENTS POCS, WITHOUT TOUCHING PRODUCTION
+- **EXPOSURE:** LOCAL / LAB ONLY (NOT PUBLIC)
+
+##### **2.2 VPS INFOMANIAK — 83.228.192.116 (DOCKER + TOOLS)**
+- **HOST OS / ROLE:** DEBIAN; DOCKER ENGINE FOR INTERNAL SERVICES + MONITORING
+
+##### **Services**
+- **PORTAINER** — <https://docker.kuzlab.org>  
+
+  _Docker administration (stacks, images, logs, deployments)._  
+  **ACCESS:** Auth required (MFA recommended)
+
+- **N8N** — <https://n8n.kuzai.org>  
+
+  _Workflow engine for AI news harvesting & GitHub search that feeds KUZAI.ORG._  
+  **BACKUP:** Export workflows + persistent volume
+
+- **UPTIME-KUMA** — <https://uptime-kuma.kuzlab.org/dashboard>  
+
+  _Availability monitoring (HTTP/HTTPS), alerts, uptime history._ 
+  **ACTION:** Add all public FQDNs to monitoring
+
+- **WIKI (BOOKSTACK)** — <https://wiki.kuzlab.org/login>  
+  _Central documentation (procedures, access, architecture, checklists)._
+  
+-  **BACKUPS:** DB + uploads + `.env`
+
+
+##### **2.3 VPS LWS — 91.234.194.49 (APACHE2 WEB FRONT)**
+- **HOST OS / ROLE:** DEBIAN; APACHE2 SERVING PUBLIC WEBSITES
+
+##### **Public websites**
+- **KUZAI.ORG (DESKTOP)** — <https://kuzai.org>  
+
+  _Universal AI Index — desktop experience._
+
+- **MOB.KUZAI.ORG (MOBILE)** — <https://mob.kuzai.org>  
+
+  _Universal AI Index — mobile-optimized._
+
+- **FIRST.KUZLAB.ORG (CNRS CLONE)** — <https://first.kuzlab.org>  
+
+  _Reference clone of the CNRS “First” website._
+
+- **KANBOARD** — <https://kan.kuzai.org:9443>  
+  _Project management (kanban, backlog, roadmaps) served via Apache2 on this VPS._
+
+##### **2.4 SOCIAL & VERSIONING**
+- **GITHUB (GENERAL)** — <https://github.com/kusanagi8200>  
+
+  _General versioning for The KUZ Network._
+
+- **GITHUB (N8N)** — <https://github.com/KuzaiN8N>  
+
+  _n8n workflows & automations._
+
+- **YOUTUBE** — <https://www.youtube.com/@kuzai-org>  
+
+  _Information & updates._
+
+- **X (TWITTER)** — <https://x.com/kuzai_org>  
+
+  _News & quick updates._
+
+---
+
+##### **3) HOW IT FITS TOGETHER (FLOW)**
+
+1. **CODE & CONTENT** ARE VERSIONED ON GITHUB (GENERAL + N8N).
+2. **N8N** (INFOMANIAK) HARVESTS/CURATES DATA (E.G., AI NEWS) → FEEDS **KUZAI.ORG**.
+3. **PUBLIC SITES** ARE SERVED BY **APACHE2** ON THE **LWS** VPS.
+4. **UPTIME-KUMA** (INFOMANIAK) MONITORS ALL EXPOSED FQDNS (ALERTS/HISTORY).
+5. **KANBOARD** DRIVES PROJECT EXECUTION; **WIKI** IS THE DOCUMENTATION SOURCE OF TRUTH.
+6. **AI SERVER** REMAINS THE SAFE R&D PLAYGROUND FOR LLMS.
+
+---
+
+##### **4) SERVER TREES**
+
+##### **INFOMANIAK — 83.228.192.116**
+```
+Infomaniak (Debian)
+├─ Apache2 (reverse/virtual host)
+|
+└─ Docker Engine
+    ├─ Portainer                 → docker.kuzlab.org
+    ├─ n8n                       → n8n.kuzai.org
+    ├─ Uptime-Kuma               → uptime-kuma.kuzlab.org/dashboard
+    └─ BookStack (Wiki)          → wiki.kuzlab.org/login
+```
+
+##### **LWS — 91.234.194.49**
+```
+LWS (Debian)
+└─ Apache2 (public front)
+    ├─ kuzai.org                 → Universal AI Index (Desktop)
+    ├─ mob.kuzai.org             → Universal AI Index (Mobile)
+    ├─ first.kuzlab.org          → “First” CNRS clone
+    └─ kan.kuzai.org:9443        → Kanboard (project management)
+```
+
+##### **AI SERVER (LOCAL)**
+```
+AI SERVER (Local / Lab)
+└─ LLM environments             → model tests, benchmarks, POCs (not publicly exposed)
+```
+
+---
+
+##### **5) DNS SUMMARY**
+```
+kuzai.org:
+  @ (apex)              → 91.234.194.49
+  mob.kuzai.org         → 91.234.194.49
+  n8n.kuzai.org         → 83.228.192.116
+  kan.kuzai.org         → 83.228.192.116 (port 9443)
+
+kuzlab.org:
+  docker.kuzlab.org     → 83.228.192.116
+  uptime-kuma.kuzlab.org→ 83.228.192.116
+  wiki.kuzlab.org       → 83.228.192.116
+  first.kuzlab.org      → 91.234.194.49
+```
+
+---
+
+##### SOFTWARE INVOLVED IN THE INFRASTRUCTURE
+
+This page lists the **software**, its **purpose**, and **how components connect** to each other. 
+
+---
+
+##### SUMMARY (TABLE)
+
+| Software | Host / IP | Endpoints | Purpose | Connected to… |
+|---|---|---|---|---|
+| **APACHE2 (WEB FRONT)** | VPS LWS — **91.234.194.49** | `https://kuzai.org`, `https://mob.kuzai.org`, `https://first.kuzlab.org` | Serve public sites (HTTP/HTTPS) | Consumes **n8n** feeds; deployments from **GitHub** |
+| **APACHE2 (KANBOARD VHOST)** | VPS INFOMANIAK — **83.228.192.116** | `https://kan.kuzai.org:9443` | Expose **Kanboard** over HTTPS | Serves **Kanboard**; internal users access |
+| **DOCKER ENGINE** | VPS INFOMANIAK — **83.228.192.116** | — | Run internal **containers** | Hosts **Portainer**, **n8n**, **Uptime-Kuma**, **BookStack** |
+| **PORTAINER** | VPS INFOMANIAK — **83.228.192.116** | `https://docker.kuzlab.org` | Docker administration (stacks, images, logs, deployments) | Controls **Docker Engine**; used by **admins** |
+| **n8n (WORKFLOWS)** | VPS INFOMANIAK — **83.228.192.116** | `https://n8n.kuzai.org` | Automation: **harvest/curate**, export **feeds** | Publishes **feeds** → **kuzai.org** / **mob.kuzai.org** |
+| **UPTIME-KUMA (MONITORING)** | VPS INFOMANIAK — **83.228.192.116** | `https://uptime-kuma.kuzlab.org/dashboard` | HTTP/HTTPS **monitoring**, alerts, history | Probes all **public FQDNs** |
+| **BOOKSTACK (WIKI)** | VPS INFOMANIAK — **83.228.192.116** | `https://wiki.kuzlab.org/login` | Central **documentation** | Linked with **Kanboard**; DB/uploads backups |
+| **KANBOARD** | VPS INFOMANIAK — **83.228.192.116** (via Apache2) | `https://kan.kuzai.org:9443` | **Project management** | Internal users; referenced by the **Wiki** |
+| **GITHUB (kusanagi8200 / KuzaiN8N)** | External | `https://github.com/kusanagi8200`, `https://github.com/KuzaiN8N` | **Versioning** code & **n8n workflows** | Deployment source for **web front** / **Docker stacks** |
+| **AI SERVER (LLM LAB)** | Local (not exposed) | — | **LLM tests** (bench, RAG/agent POCs) | Push code/data to **GitHub** (as needed) |
+
+---
+
+##### DETAILS BY COMPONENT
+
+##### APACHE2 — WEB FRONT (VPS LWS — 91.234.194.49)
+- **Purpose:** serve `kuzai.org`, `mob.kuzai.org`, `first.kuzlab.org` over **HTTP/HTTPS**.  
+- **Connections:**
+  - **Inbound:** user traffic (Internet), content/data (**n8n** feeds over HTTP).
+  - **Outbound:** web responses; logs to admins.
+  - **Deploys:** artifacts/content **from GitHub** (per your deployment process).
+
+##### APACHE2 — KANBOARD VHOST (VPS INFOMANIAK — 83.228.192.116)
+- **Purpose:** publish `kan.kuzai.org:9443` over **HTTPS** (dedicated vhost).  
+- **Connections:**
+  - **Inbound:** internal users.
+  - **Outbound:** Kanboard UI/app, optional webhooks (if enabled).
+
+##### DOCKER ENGINE (VPS INFOMANIAK — 83.228.192.116)
+- **Purpose:** runtime for **Portainer**, **n8n**, **Uptime-Kuma**, **BookStack**.  
+- **Connections:**
+  - **Managed by** **Portainer** (admin UI).
+  - Exposes each service through its FQDN (HTTPS).
+
+##### PORTAINER — `https://docker.kuzlab.org`
+- **Purpose:** Docker **administration** UI (stacks, images, logs).  
+- **Connections:**
+  - **To Docker Engine** (control plane).
+  - **Access:** admins (MFA recommended).
+
+##### n8n — `https://n8n.kuzai.org`
+- **Purpose:** **workflows** (AI news harvesting, search, normalization), exporting **feeds**.  
+- **Connections:**
+  - **Inbound:** public sources (HTTP).
+  - **Outbound:** **kuzai.org** / **mob.kuzai.org** consume feeds over HTTP.
+  - **Backups:** export workflows + persistent volume.
+
+##### UPTIME-KUMA — `https://uptime-kuma.kuzlab.org/dashboard`
+- **Purpose:** **monitoring** HTTP/HTTPS endpoints, alerts.  
+- **Connections:**
+  - **Probes** all public FQDNs.
+  - **Outbound:** notifications (email/IM per config).
+
+##### BOOKSTACK (WIKI) — `https://wiki.kuzlab.org/login`
+- **Purpose:** **documentation** and source of truth (procedures, access, architecture).  
+- **Connections:**
+  - Cross-links to **Kanboard** (projects/tasks) and internal resources.
+  - **Backups:** DB + uploads + `.env`.
+
+##### KANBOARD — `https://kan.kuzai.org:9443`
+- **Purpose:** **project management** (kanban, backlog, roadmaps).  
+- **Connections:**
+  - Internal users; linked with the **Wiki**.
+  - Optional webhooks to **n8n** (if you automate).
+
+##### GITHUB — `https://github.com/kusanagi8200` / `https://github.com/KuzaiN8N`
+- **Purpose:** **versioning** of site code/scripts and **n8n workflows**.  
+- **Connections:**
+  - Deployment source for **web front** (Apache2) and **Docker stacks** (Portainer/compose).
+  - History/PR/CI as needed.
+
+##### AI SERVER — (LOCAL)
+- **Purpose:** **LLM lab** (tests, benchmarks, RAG/agent POCs) without impacting production.  
+- **Connections:**
+  - Can **push code/data** to **GitHub**; no public exposure.
+
+---
+
+##### MAIN FLOWS (AT A GLANCE)
+
+- **Users →** `kuzai.org` / `mob.kuzai.org` (**Apache2** on **LWS**).  
+- **n8n →** publishes **HTTP feeds** → **kuzai.org/mob.kuzai.org** consume those feeds.  
+- **Uptime-Kuma →** probes all **FQDNs** and sends **alerts**.  
+- **Portainer →** admin for the **Docker Engine** (deploy/upgrade).  
+- **Wiki ↔ Kanboard →** documentation & project delivery (cross-linked).  
+- **GitHub →** single source of **code/workflows** (front & containers).  
+- **AI SERVER →** LLM experimentation (push to **GitHub** if needed).
+
+---
+
+##### ADDRESSING RECAP
+
+- **LWS (91.234.194.49)**: `kuzai.org`, `mob.kuzai.org`, `first.kuzlab.org`  
+- **INFOMANIAK (83.228.192.116)**: `n8n.kuzai.org`, `docker.kuzlab.org`, `uptime-kuma.kuzlab.org`, `wiki.kuzlab.org`, `kan.kuzai.org:9443`
+
+---
