@@ -1,7 +1,5 @@
 #### THE KUZLAB - INFRASTRUCTURE (IN REVIEW)
 
-[![TKN-SYNOPTIC-2026.jpg](https://wiki.kuzlab.org/uploads/images/gallery/2026-04/scaled-1680-/21atkn-synoptic-2026.jpg)](https://wiki.kuzlab.org/uploads/images/gallery/2026-04/21atkn-synoptic-2026.jpg)
-
 ---
 
 Last updated -->   2026-04-08
