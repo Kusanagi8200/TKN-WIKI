@@ -34,7 +34,7 @@ DOMAINS
 - SRV4 - LOCAL / LLM INFRA 2 -->   LLAMA.CPP ENGINE, DARKAI LLM MODEL
 - DUO CHAT MANAGEMENT LAYER -->   WEB-UI MANAGEMENT, MODEL SYSTEM PROMPT, TURNS FINE TUNING, TURNS TRANSCRIPT
 - LOCAL FLOW -->   WEB-UI → APACHE / VHOST / PROXY (SRV3) → PYTHON ORCHESTRATOR → LLAMA.CPP ENGINES (SRV3 / SRV4) → LOCAL MODELS / TRANSCRIPTS / TURN DATA
-
+---
 ##### 2.2 VPS INFOMANIAK - 83.228.192.116 (DOCKER + TOOLS)
 - HOST OS / ROLE -->   DEBIAN; DOCKER ENGINE FOR INTERNAL SERVICES + MONITORING
 
@@ -53,7 +53,7 @@ DOMAINS
 
 - AZURACAST / KUZFM RADIO - <https://radio.kuzai.org/public/kuzfm>  
   _Radio backend / public stream service for KUzFM,._
-
+---
 ##### 2.3 VPS LWS - 91.234.194.49 (APACHE2 WEB FRONT)
 - HOST OS / ROLE -->   DEBIAN; APACHE2 SERVING PUBLIC WEBSITES
 
@@ -185,67 +185,67 @@ This page lists the software, its purpose, and how components connect to each ot
   - Inbound -->   user traffic (Internet), content/data (n8n feeds over HTTP).
   - Outbound -->   web responses; logs to admins.
   - Deploys -->   artifacts/content from GitHub (per your deployment process).
-
+---
 ##### APACHE2 - KANBOARD VHOST (VPS INFOMANIAK - 83.228.192.116)
 - Purpose -->   publish `kan.kuzai.org -->  9443` over HTTPS (dedicated vhost).
 - Connections -->  
   - Inbound -->   internal users.
   - Outbound -->   Kanboard UI/app, optional webhooks (if enabled).
-
+---
 ##### DOCKER ENGINE (VPS INFOMANIAK - 83.228.192.116)
 - Purpose -->   runtime for Portainer, n8n, Uptime-Kuma, BookStack.
 - Connections -->  
   - Managed by Portainer (admin UI).
   - Exposes each service through its FQDN (HTTPS).
-
+---
 ##### PORTAINER - `https://docker.kuzlab.org`
 - Purpose -->   Docker administration UI (stacks, images, logs).
 - Connections -->  
   - To Docker Engine (control plane).
   - Access -->   admins (MFA recommended).
-
+---
 ##### n8n - `https://n8n.kuzai.org`
 - Purpose -->   workflows (AI news harvesting, search, normalization), exporting feeds.
 - Connections -->  
   - Inbound -->   public sources (HTTP).
   - Outbound -->   kuzai.org / mob.kuzai.org consume feeds over HTTP.
   - Backups -->   export workflows + persistent volume.
-
+---
 ##### UPTIME-KUMA - `https://uptime-kuma.kuzlab.org/dashboard`
 - Purpose -->   monitoring HTTP/HTTPS endpoints, alerts.
 - Connections -->  
   - Probes all public FQDNs.
   - Outbound -->   notifications (email/IM per config).
-
+---
 ##### BOOKSTACK (WIKI) - `https://wiki.kuzlab.org/login`
 - Purpose -->   documentation and source of truth (procedures, access, architecture).
 - Connections -->  
   - Cross-links to Kanboard (projects/tasks) and internal resources.
   - Backups -->   DB + uploads + `.env`.
-
+---
 ##### KANBOARD - `https://kan.kuzai.org -->  9443`
 - Purpose -->   project management (kanban, backlog, roadmaps).
 - Connections -->  
   - Internal users; linked with the Wiki.
   - Optional webhooks to n8n (if you automate).
-
+---
 ##### RADIO.KUZAI.ORG / AZURACAST - `https://radio.kuzai.org/public/kuzfm`
 - Purpose -->   public KUzFM radio page / streaming entry point.
 - Connections -->  
   - Public users access the radio page and stream entry point.
   - Backed by the AZURACAST stack shown on the INFOMANIAK side of the synoptic.
   - Can be exposed through the Apache / reverse proxy layer used for public access.
-
+---
 ##### GITHUB - `https://github.com/kusanagi8200` / `https://github.com/KuzaiN8N`
 - Purpose -->   versioning of site code/scripts and n8n workflows.
 - Connections -->  
   - Deployment source for web front (Apache2) and Docker stacks (Portainer/compose).
   - History/PR/CI as needed.
-
+---
 ##### AI SERVER - (LOCAL)
 - Purpose -->   LLM lab (tests, benchmarks, RAG/agent POCs) without impacting production.
 - Connections -->  
-
+---
 ##### LOCAL LLM DUO CHAT - (LOCAL)
 - Purpose -->   dual-node local chat / orchestration environment for model-to-model and user-to-model conversation workflows without impacting production.
 - Architecture -->  
