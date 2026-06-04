@@ -35,7 +35,7 @@ $QS_NAMESPACE               # QuickSight namespace, usually default
 $CUSTOM_PERMISSION_NAME     # QuickSight custom permission profile name
 ```
 
-Example values, to replace:
+Example values, to replace --> 
 
 ```bash
 AWS_ACCOUNT_ID="CHANGE_ME_ACCOUNT_ID"
@@ -55,21 +55,21 @@ This part installs the basic Linux packages required by AWS CLI and the scripts.
 
 `curl` downloads the AWS CLI installer. `unzip` extracts it. `jq` parses JSON responses. `nano` is optional but useful for editing files from the terminal.
 
-On Debian / Ubuntu:
+On Debian / Ubuntu --> 
 
 ```bash
  apt update
  apt install -y curl unzip jq less groff nano
 ```
 
-If you are already root, remove ``:
+If you are already root, remove `` --> 
 
 ```bash
 apt update
 apt install -y curl unzip jq less groff nano
 ```
 
-Verification:
+Verification --> 
 
 ```bash
 curl --version
@@ -85,29 +85,29 @@ This part installs the official AWS CLI v2 bundled installer for Linux.
 
 ```bash
 cd /tmp
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+curl "https --> //awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
 rm -rf aws
 unzip -q awscliv2.zip
  ./aws/install
 ```
 
-If you are root:
+If you are root --> 
 
 ```bash
 cd /tmp
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+curl "https --> //awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
 rm -rf aws
 unzip -q awscliv2.zip
 ./aws/install
 ```
 
-Verification:
+Verification --> 
 
 ```bash
 aws --version
 ```
 
-Expected result:
+Expected result --> 
 
 ```text
 aws-cli/2.x.x Python/... Linux/...
@@ -120,13 +120,13 @@ This part creates one local environment file used by all scripts.
 
 The file does not contain AWS secrets. It only contains account metadata and profile names.
 
-Create the file:
+Create the file --> 
 
 ```bash
 nano ~/.aws-quicksuite.env
 ```
 
-Content:
+Content --> 
 
 ```bash
 export AWS_ACCOUNT_ID="CHANGE_ME_ACCOUNT_ID"
@@ -139,25 +139,25 @@ export QS_NAMESPACE="default"
 export CUSTOM_PERMISSION_NAME="CHANGE_ME_CUSTOM_PERMISSION"
 ```
 
-Example for region only:
+Example for region only --> 
 
 ```bash
 export AWS_REGION="eu-west-1"
 ```
 
-Protect the file:
+Protect the file --> 
 
 ```bash
 chmod 600 ~/.aws-quicksuite.env
 ```
 
-Load it in the current shell:
+Load it in the current shell --> 
 
 ```bash
 source ~/.aws-quicksuite.env
 ```
 
-Verification:
+Verification --> 
 
 ```bash
 echo "$AWS_ACCOUNT_ID"
@@ -173,13 +173,13 @@ This part creates the base AWS CLI profile.
 
 This profile uses the IAM access key and secret access key. It should be used only to request a temporary MFA session. Do not put the secret access key in a script.
 
-Run:
+Run --> 
 
 ```bash
 aws configure --profile "$BASE_PROFILE"
 ```
 
-Enter the values when prompted:
+Enter the values when prompted --> 
 
 ```text
 AWS Access Key ID--><your access key ID>
@@ -188,19 +188,19 @@ Default region name--><your AWS region>
 Default output format-->json
 ```
 
-Verify the base profile:
+Verify the base profile --> 
 
 ```bash
 aws sts get-caller-identity --profile "$BASE_PROFILE"
 ```
 
-Expected result:
+Expected result --> 
 
 ```json
 {
   "UserId"-->"...",
   "Account"-->"...",
-  "Arn"-->"arn:aws:iam::<account-id>:user/<iam-user-name>"
+  "Arn"-->"arn --> aws --> iam -->  --> <account-id> --> user/<iam-user-name>"
 }
 ```
 
@@ -211,7 +211,7 @@ This part retrieves the exact MFA device ARN attached to the IAM user.
 
 Do not guess the MFA device name. AWS can store a device name that is different from the IAM user name.
 
-Run:
+Run --> 
 
 ```bash
 aws iam list-mfa-devices \
@@ -220,27 +220,27 @@ aws iam list-mfa-devices \
   --output json
 ```
 
-Expected result:
+Expected result --> 
 
 ```json
 {
   "MFADevices"-->[
     {
       "UserName"-->"...",
-      "SerialNumber"-->"arn:aws:iam::<account-id>:mfa/<mfa-device-name>",
+      "SerialNumber"-->"arn --> aws --> iam -->  --> <account-id> --> mfa/<mfa-device-name>",
       "EnableDate"-->"..."
     }
   ]
 }
 ```
 
-If the returned MFA device name is different, update this value in `~/.aws-quicksuite.env`:
+If the returned MFA device name is different, update this value in `~/.aws-quicksuite.env` --> 
 
 ```bash
 export MFA_DEVICE_NAME="CHANGE_ME_MFA_DEVICE"
 ```
 
-Reload the file:
+Reload the file --> 
 
 ```bash
 source ~/.aws-quicksuite.env
@@ -253,13 +253,13 @@ This part creates the `aws-mfa` command.
 
 The command asks for a 6-digit MFA code, calls AWS STS, receives temporary credentials, and writes them into the MFA profile.
 
-Create the file:
+Create the file --> 
 
 ```bash
  nano /usr/local/bin/aws-mfa
 ```
 
-Content:
+Content --> 
 
 ```bash
 #!/usr/bin/env bash
@@ -275,7 +275,7 @@ fi
 
 source "${ENV_FILE}"
 
-MFA_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:mfa/${MFA_DEVICE_NAME}"
+MFA_ARN="arn --> aws --> iam -->  --> ${AWS_ACCOUNT_ID} --> mfa/${MFA_DEVICE_NAME}"
 MFA_DURATION="43200"
 
 echo "Base profile -->${BASE_PROFILE}"
@@ -311,42 +311,42 @@ echo
 echo "Temporary MFA profile regenerated-->${MFA_PROFILE}"
 echo "Expiration-->${EXPIRATION}"
 echo
-echo "AWS identity check:"
+echo "AWS identity check --> "
 aws sts get-caller-identity --profile "${MFA_PROFILE}"
 ```
 
-Make it executable:
+Make it executable --> 
 
 ```bash
  chmod +x /usr/local/bin/aws-mfa
 ```
 
-If you are root:
+If you are root --> 
 
 ```bash
 chmod +x /usr/local/bin/aws-mfa
 ```
 
-Verify syntax:
+Verify syntax --> 
 
 ```bash
 bash -n /usr/local/bin/aws-mfa
 ```
 
-Run it:
+Run it --> 
 
 ```bash
 aws-mfa
 ```
 
-Expected result:
+Expected result --> 
 
 ```text
 Temporary MFA profile regenerated--><mfa-profile-name>
 Expiration--><timestamp>
 ```
 
-Verify the MFA profile:
+Verify the MFA profile --> 
 
 ```bash
 aws sts get-caller-identity --profile "$MFA_PROFILE"
@@ -359,13 +359,13 @@ This part creates the `qs-tools` command.
 
 The command uses the MFA profile and provides reusable QuickSuite / QuickSight operations.
 
-Create the file:
+Create the file --> 
 
 ```bash
  nano /usr/local/bin/qs-tools
 ```
 
-Content:
+Content --> 
 
 ```bash
 #!/usr/bin/env bash
@@ -383,21 +383,21 @@ source "${ENV_FILE}"
 
 usage() {
   cat <<USAGE
-Usage:
+Usage --> 
   qs-tools mfa
   qs-tools identity
   qs-tools users
   qs-tools permissions
   qs-tools users-full
 
-Commands:
+Commands --> 
   mfa          Regenerate the temporary MFA profile
   identity     Check AWS identity with the MFA profile
   users        List QuickSuite / QuickSight users
   permissions  List QuickSuite / QuickSight custom permissions
   users-full   List users with email, role, custom permissions, and active state
 
-Configuration:
+Configuration --> 
   Account ID   -->${AWS_ACCOUNT_ID}
   Region       -->${AWS_REGION}
   Namespace    -->${QS_NAMESPACE}
@@ -437,11 +437,11 @@ list_users_full() {
     --namespace "${QS_NAMESPACE}" \
     --region "${AWS_REGION}" \
     --profile "${MFA_PROFILE}" \
-    --query "UserList[].{UserName:UserName,Email:Email,Role:Role,CustomPermissions:CustomPermissionsName,Active:Active}" \
+    --query "UserList[].{UserName --> UserName,Email --> Email,Role --> Role,CustomPermissions --> CustomPermissionsName,Active --> Active}" \
     --output table
 }
 
-case "${1:-}" in
+case "${1 --> -}" in
   mfa)
     aws-mfa
     ;;
@@ -469,25 +469,25 @@ case "${1:-}" in
 esac
 ```
 
-Make it executable:
+Make it executable --> 
 
 ```bash
  chmod +x /usr/local/bin/qs-tools
 ```
 
-If you are root:
+If you are root --> 
 
 ```bash
 chmod +x /usr/local/bin/qs-tools
 ```
 
-Verify syntax:
+Verify syntax --> 
 
 ```bash
 bash -n /usr/local/bin/qs-tools
 ```
 
-Verify the command:
+Verify the command --> 
 
 ```bash
 qs-tools help
@@ -498,31 +498,31 @@ qs-tools help
 
 This part shows the normal workflow.
 
-When the MFA profile is expired, regenerate it:
+When the MFA profile is expired, regenerate it --> 
 
 ```bash
 qs-tools mfa
 ```
 
-Check the AWS identity:
+Check the AWS identity --> 
 
 ```bash
 qs-tools identity
 ```
 
-List QuickSuite / QuickSight users:
+List QuickSuite / QuickSight users --> 
 
 ```bash
 qs-tools users
 ```
 
-List custom permissions:
+List custom permissions --> 
 
 ```bash
 qs-tools permissions
 ```
 
-List users with role and custom permissions:
+List users with role and custom permissions --> 
 
 ```bash
 qs-tools users-full
@@ -533,10 +533,10 @@ qs-tools users-full
 
 This part gives the raw AWS CLI commands without helper scripts.
 
-Regenerate MFA session manually:
+Regenerate MFA session manually --> 
 
 ```bash
-MFA_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:mfa/${MFA_DEVICE_NAME}"
+MFA_ARN="arn --> aws --> iam -->  --> ${AWS_ACCOUNT_ID} --> mfa/${MFA_DEVICE_NAME}"
 TOKEN="CHANGE_ME_CURRENT_MFA_CODE"
 
 SESSION_JSON=$(aws sts get-session-token \
@@ -547,7 +547,7 @@ SESSION_JSON=$(aws sts get-session-token \
   --output json)
 ```
 
-List users:
+List users --> 
 
 ```bash
 aws quicksight list-users \
@@ -559,7 +559,7 @@ aws quicksight list-users \
   --output table
 ```
 
-List custom permissions:
+List custom permissions --> 
 
 ```bash
 aws quicksight list-custom-permissions \
@@ -570,7 +570,7 @@ aws quicksight list-custom-permissions \
   --output table
 ```
 
-List users with role and custom permission:
+List users with role and custom permission --> 
 
 ```bash
 aws quicksight list-users \
@@ -578,7 +578,7 @@ aws quicksight list-users \
   --namespace "${QS_NAMESPACE}" \
   --region "${AWS_REGION}" \
   --profile "${MFA_PROFILE}" \
-  --query "UserList[].{UserName:UserName,Email:Email,Role:Role,CustomPermissions:CustomPermissionsName,Active:Active}" \
+  --query "UserList[].{UserName --> UserName,Email --> Email,Role --> Role,CustomPermissions --> CustomPermissionsName,Active --> Active}" \
   --output table
 ```
 
@@ -587,13 +587,13 @@ aws quicksight list-users \
 
 This part is optional. It applies one QuickSuite / QuickSight custom permission profile to a defined list of users.
 
-Create the script:
+Create the script --> 
 
 ```bash
 nano ~/qs-apply-custom-permission.sh
 ```
 
-Content:
+Content --> 
 
 ```bash
 #!/usr/bin/env bash
@@ -625,25 +625,25 @@ for USER_NAME in "${USERS[@]}"; do
  done
 ```
 
-Make executable:
+Make executable --> 
 
 ```bash
 chmod +x ~/qs-apply-custom-permission.sh
 ```
 
-Syntax check:
+Syntax check --> 
 
 ```bash
 bash -n ~/qs-apply-custom-permission.sh
 ```
 
-Run:
+Run --> 
 
 ```bash
 ~/qs-apply-custom-permission.sh
 ```
 
-Verify after execution:
+Verify after execution --> 
 
 ```bash
 qs-tools users-full
@@ -652,14 +652,14 @@ qs-tools users-full
 
 ## 13. Troubleshooting
 
-If AWS CLI is not found:
+If AWS CLI is not found --> 
 
 ```bash
 which aws
 aws --version
 ```
 
-If the MFA profile is expired:
+If the MFA profile is expired --> 
 
 ```bash
 qs-tools mfa
@@ -667,7 +667,7 @@ qs-tools mfa
 
 If QuickSight returns `AccessDeniedException` with `explicit deny`, check whether an IAM policy requires MFA. In that case, use the MFA profile, not the base profile.
 
-If the MFA code fails, verify the exact MFA device name:
+If the MFA code fails, verify the exact MFA device name --> 
 
 ```bash
 aws iam list-mfa-devices \
@@ -676,13 +676,13 @@ aws iam list-mfa-devices \
   --output json
 ```
 
-If `jq` is missing:
+If `jq` is missing --> 
 
 ```bash
  apt install -y jq
 ```
 
-If you are root:
+If you are root --> 
 
 ```bash
 apt install -y jq
