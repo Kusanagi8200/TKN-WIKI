@@ -58,11 +58,11 @@ This part installs the basic Linux packages required by AWS CLI and the scripts.
 On Debian / Ubuntu:
 
 ```bash
-sudo apt update
-sudo apt install -y curl unzip jq less groff nano
+ apt update
+ apt install -y curl unzip jq less groff nano
 ```
 
-If you are already root, remove `sudo`:
+If you are already root, remove ``:
 
 ```bash
 apt update
@@ -88,7 +88,7 @@ cd /tmp
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
 rm -rf aws
 unzip -q awscliv2.zip
-sudo ./aws/install
+ ./aws/install
 ```
 
 If you are root:
@@ -256,7 +256,7 @@ The command asks for a 6-digit MFA code, calls AWS STS, receives temporary crede
 Create the file:
 
 ```bash
-sudo nano /usr/local/bin/aws-mfa
+ nano /usr/local/bin/aws-mfa
 ```
 
 Content:
@@ -318,7 +318,7 @@ aws sts get-caller-identity --profile "${MFA_PROFILE}"
 Make it executable:
 
 ```bash
-sudo chmod +x /usr/local/bin/aws-mfa
+ chmod +x /usr/local/bin/aws-mfa
 ```
 
 If you are root:
@@ -362,7 +362,7 @@ The command uses the MFA profile and provides reusable QuickSuite / QuickSight o
 Create the file:
 
 ```bash
-sudo nano /usr/local/bin/qs-tools
+ nano /usr/local/bin/qs-tools
 ```
 
 Content:
@@ -472,7 +472,7 @@ esac
 Make it executable:
 
 ```bash
-sudo chmod +x /usr/local/bin/qs-tools
+ chmod +x /usr/local/bin/qs-tools
 ```
 
 If you are root:
@@ -679,7 +679,7 @@ aws iam list-mfa-devices \
 If `jq` is missing:
 
 ```bash
-sudo apt install -y jq
+ apt install -y jq
 ```
 
 If you are root:
