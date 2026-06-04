@@ -17,7 +17,7 @@ Second, the base AWS profile stores the IAM access key used only to request MFA-
 
 Third, the MFA profile stores temporary session credentials generated with `sts get-session-token`. This is the profile to use for protected AWS operations.
 
-Fourth, the `qs-tools` command centralizes useful QuickSuite / QuickSight management commands: list users, list custom permissions, and list users with roles and assigned custom permissions.
+Fourth, the `qs-tools` command centralizes useful QuickSuite / QuickSight management commands-->list users, list custom permissions, and list users with roles and assigned custom permissions.
 
 
 ## 2. Variables used in this document
@@ -182,10 +182,10 @@ aws configure --profile "$BASE_PROFILE"
 Enter the values when prompted:
 
 ```text
-AWS Access Key ID: <your access key ID>
-AWS Secret Access Key: <your secret access key>
-Default region name: <your AWS region>
-Default output format: json
+AWS Access Key ID--><your access key ID>
+AWS Secret Access Key--><your secret access key>
+Default region name--><your AWS region>
+Default output format-->json
 ```
 
 Verify the base profile:
@@ -198,9 +198,9 @@ Expected result:
 
 ```json
 {
-  "UserId": "...",
-  "Account": "...",
-  "Arn": "arn:aws:iam::<account-id>:user/<iam-user-name>"
+  "UserId"-->"...",
+  "Account"-->"...",
+  "Arn"-->"arn:aws:iam::<account-id>:user/<iam-user-name>"
 }
 ```
 
@@ -224,11 +224,11 @@ Expected result:
 
 ```json
 {
-  "MFADevices": [
+  "MFADevices"-->[
     {
-      "UserName": "...",
-      "SerialNumber": "arn:aws:iam::<account-id>:mfa/<mfa-device-name>",
-      "EnableDate": "..."
+      "UserName"-->"...",
+      "SerialNumber"-->"arn:aws:iam::<account-id>:mfa/<mfa-device-name>",
+      "EnableDate"-->"..."
     }
   ]
 }
@@ -269,7 +269,7 @@ set -euo pipefail
 ENV_FILE="${HOME}/.aws-quicksuite.env"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
-  echo "Missing configuration file: ${ENV_FILE}"
+  echo "Missing configuration file-->${ENV_FILE}"
   exit 1
 fi
 
@@ -278,13 +278,13 @@ source "${ENV_FILE}"
 MFA_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:mfa/${MFA_DEVICE_NAME}"
 MFA_DURATION="43200"
 
-echo "Base profile : ${BASE_PROFILE}"
-echo "MFA profile  : ${MFA_PROFILE}"
-echo "Region       : ${AWS_REGION}"
-echo "MFA ARN      : ${MFA_ARN}"
+echo "Base profile -->${BASE_PROFILE}"
+echo "MFA profile  -->${MFA_PROFILE}"
+echo "Region       -->${AWS_REGION}"
+echo "MFA ARN      -->${MFA_ARN}"
 echo
 
-read -rp "Code MFA AWS: " TOKEN
+read -rp "Code MFA AWS-->" TOKEN
 
 echo
 echo "Generating temporary MFA profile..."
@@ -308,8 +308,8 @@ aws configure set region "${AWS_REGION}" --profile "${MFA_PROFILE}"
 aws configure set output json --profile "${MFA_PROFILE}"
 
 echo
-echo "Temporary MFA profile regenerated: ${MFA_PROFILE}"
-echo "Expiration: ${EXPIRATION}"
+echo "Temporary MFA profile regenerated-->${MFA_PROFILE}"
+echo "Expiration-->${EXPIRATION}"
 echo
 echo "AWS identity check:"
 aws sts get-caller-identity --profile "${MFA_PROFILE}"
@@ -342,8 +342,8 @@ aws-mfa
 Expected result:
 
 ```text
-Temporary MFA profile regenerated: <mfa-profile-name>
-Expiration: <timestamp>
+Temporary MFA profile regenerated--><mfa-profile-name>
+Expiration--><timestamp>
 ```
 
 Verify the MFA profile:
@@ -375,7 +375,7 @@ set -euo pipefail
 ENV_FILE="${HOME}/.aws-quicksuite.env"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
-  echo "Missing configuration file: ${ENV_FILE}"
+  echo "Missing configuration file-->${ENV_FILE}"
   exit 1
 fi
 
@@ -398,12 +398,12 @@ Commands:
   users-full   List users with email, role, custom permissions, and active state
 
 Configuration:
-  Account ID   : ${AWS_ACCOUNT_ID}
-  Region       : ${AWS_REGION}
-  Namespace    : ${QS_NAMESPACE}
-  Base profile : ${BASE_PROFILE}
-  MFA profile  : ${MFA_PROFILE}
-  MFA device   : ${MFA_DEVICE_NAME}
+  Account ID   -->${AWS_ACCOUNT_ID}
+  Region       -->${AWS_REGION}
+  Namespace    -->${QS_NAMESPACE}
+  Base profile -->${BASE_PROFILE}
+  MFA profile  -->${MFA_PROFILE}
+  MFA device   -->${MFA_DEVICE_NAME}
 USAGE
 }
 
@@ -461,7 +461,7 @@ case "${1:-}" in
     usage
     ;;
   *)
-    echo "Unknown command: $1"
+    echo "Unknown command-->$1"
     echo
     usage
     exit 1
@@ -583,7 +583,7 @@ aws quicksight list-users \
 ```
 
 
-## 12. Optional: apply a custom permission to several users
+## 12. Optional-->apply a custom permission to several users
 
 This part is optional. It applies one QuickSuite / QuickSight custom permission profile to a defined list of users.
 
@@ -610,7 +610,7 @@ USERS=(
 )
 
 for USER_NAME in "${USERS[@]}"; do
-  echo "Updating user: ${USER_NAME}"
+  echo "Updating user-->${USER_NAME}"
 
   aws quicksight update-user-custom-permission \
     --aws-account-id "${AWS_ACCOUNT_ID}" \
@@ -620,7 +620,7 @@ for USER_NAME in "${USERS[@]}"; do
     --region "${AWS_REGION}" \
     --profile "${MFA_PROFILE}"
 
-  echo "OK: ${USER_NAME}"
+  echo "OK-->${USER_NAME}"
   echo
  done
 ```
@@ -706,10 +706,10 @@ Rotate or delete the IAM access key if it is exposed.
 
 ## 15. Official references
 
-AWS CLI v2 Linux installation: AWS documentation, "Installing or updating to the latest version of the AWS CLI".
+AWS CLI v2 Linux installation-->AWS documentation, "Installing or updating to the latest version of the AWS CLI".
 
-AWS STS GetSessionToken with MFA: AWS CLI command reference, `sts get-session-token`.
+AWS STS GetSessionToken with MFA-->AWS CLI command reference, `sts get-session-token`.
 
-QuickSight list custom permissions: AWS CLI command reference, `quicksight list-custom-permissions`.
+QuickSight list custom permissions-->AWS CLI command reference, `quicksight list-custom-permissions`.
 
-QuickSight update user custom permission: AWS CLI command reference, `quicksight update-user-custom-permission`.
+QuickSight update user custom permission-->AWS CLI command reference, `quicksight update-user-custom-permission`.
