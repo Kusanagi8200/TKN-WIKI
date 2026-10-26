@@ -2,10 +2,10 @@
 
 ## 1. Purpose
 
-The `linkedin-autopost` system is designed to:
+The `linkedin-autopost` system is designed to -->
 
 - generate a LinkedIn post with a local LLM (`llama.cpp`)
-- preserve a fixed format:
+- preserve a fixed format -->
   - title
   - emergence line
   - 2 hashtag lines
@@ -26,21 +26,21 @@ This workflow does not depend on OpenClaw.
 - `host2`
 
 ### Components
-- local `llama.cpp` API:
+- local `llama.cpp` API -->
   - `http://127.0.0.1:8080/v1`
-- system user:
+- system user -->
   - `linkedinbot`
-- main script:
+- main script -->
   - `/opt/linkedin-autopost/autopost.py`
-- environment file:
+- environment file -->
   - `/etc/linkedin-autopost.env`
-- editorial prompt file:
+- editorial prompt file -->
   - `/etc/linkedin-autopost.prompt.txt`
-- LinkedIn token file:
+- LinkedIn token file -->
   - `/var/lib/linkedin-autopost/tokens.json`
-- optional local image:
+- optional local image -->
   - `/var/lib/linkedin-autopost/post-image.png`
-- history directory:
+- history directory -->
   - `/var/lib/linkedin-autopost/history`
 
 ---
@@ -70,9 +70,9 @@ python3 -m venv /opt/linkedin-autopost/.venv
 
 ### 3.3. Environment file
 
-File: `/etc/linkedin-autopost.env`
+File --> `/etc/linkedin-autopost.env`
 
-It contains:
+It contains -->
 
 - LinkedIn credentials
 - local `llama.cpp` URL
@@ -81,7 +81,7 @@ It contains:
 - emergence date
 - optional image path
 
-Example:
+Example -->
 
 ```bash
 LINKEDIN_CLIENT_ID=...
@@ -106,7 +106,7 @@ POST_IMAGE_PATH="/var/lib/linkedin-autopost/post-image.png"
 POST_IMAGE_ALT="KUZAI SPEAK ON LINKEDIN"
 ```
 
-Permissions:
+Permissions -->
 
 ```bash
 chown root:linkedinbot /etc/linkedin-autopost.env
@@ -115,11 +115,11 @@ chmod 0640 /etc/linkedin-autopost.env
 
 ### 3.4. Editorial prompt
 
-File: `/etc/linkedin-autopost.prompt.txt`
+File --> `/etc/linkedin-autopost.prompt.txt`
 
 This file contains the narrative instruction passed to the model.
 
-Example:
+Example -->
 
 ```text
 KUZAI presents herself as the local and independent AI of THE KUZ NETWORK.
@@ -134,7 +134,7 @@ Never break a sentence across multiple lines.
 The final line of the body must naturally end with: A bientot en ligne.
 ```
 
-Permissions:
+Permissions -->
 
 ```bash
 chown root:linkedinbot /etc/linkedin-autopost.prompt.txt
@@ -143,7 +143,7 @@ chmod 0640 /etc/linkedin-autopost.prompt.txt
 
 ### 3.5. LinkedIn token
 
-File:
+File -->
 
 ```bash
 /var/lib/linkedin-autopost/tokens.json
@@ -151,7 +151,7 @@ File:
 
 It must contain a valid `access_token`.
 
-Permissions:
+Permissions -->
 
 ```bash
 chown linkedinbot:linkedinbot /var/lib/linkedin-autopost/tokens.json
@@ -160,33 +160,33 @@ chmod 0600 /var/lib/linkedin-autopost/tokens.json
 
 ### 3.6. Optional image
 
-Optional image file location:
+Optional image file location -->
 
 ```bash
 /var/lib/linkedin-autopost/post-image.png
 ```
 
-Validation:
+Validation -->
 
 ```bash
 ls -l /var/lib/linkedin-autopost/post-image.png
 file /var/lib/linkedin-autopost/post-image.png
 ```
 
-Supported workflow formats:
+Supported workflow formats -->
 - JPG
 - PNG
 - GIF
 
 ### 3.7. Main script
 
-File:
+File -->
 
 ```bash
 /opt/linkedin-autopost/autopost.py
 ```
 
-Script responsibilities:
+Script responsibilities -->
 - load the environment
 - read the prompt file
 - call `llama.cpp`
@@ -197,7 +197,7 @@ Script responsibilities:
 - publish to LinkedIn
 - save preview and history
 
-Permissions:
+Permissions -->
 
 ```bash
 chown root:linkedinbot /opt/linkedin-autopost/autopost.py
@@ -222,7 +222,7 @@ runuser -u linkedinbot --preserve-environment -- bash --noprofile --norc -lc '
 '
 ```
 
-A dry run displays:
+A dry run displays -->
 
 - `=== EMERGENCE LINE ===`
 - `=== IMAGE MODE ===`
@@ -244,7 +244,7 @@ runuser -u linkedinbot --preserve-environment -- bash --noprofile --norc -lc '
 '
 ```
 
-A real publish additionally displays:
+A real publish additionally displays -->
 
 - `=== IMAGE URN ===`
 - `=== PUBLISH RESULT ===`
@@ -254,13 +254,13 @@ A real publish additionally displays:
 1. reads the editorial prompt
 2. asks the LLM to produce the central block
 3. checks the text is not too similar to recent posts
-4. builds the final post with:
+4. builds the final post with -->
    - title
    - emergence line
    - hashtags
    - central block
    - closing
-5. if image mode is enabled:
+5. if image mode is enabled -->
    - initializes the LinkedIn image upload
    - uploads the image
    - retrieves the `urn:li:image:...`
@@ -314,7 +314,7 @@ runuser -u linkedinbot --preserve-environment -- bash --noprofile --norc -lc '/o
 
 ## 7. Process to Modify the Initial Post Prompt
 
-The correct place to modify editorial behavior is:
+The correct place to modify editorial behavior is -->
 
 ```bash
 /etc/linkedin-autopost.prompt.txt
@@ -334,7 +334,7 @@ The correct place to modify editorial behavior is:
 nano /etc/linkedin-autopost.prompt.txt
 ```
 
-Then:
+Then -->
 
 ```bash
 set -a
@@ -348,7 +348,7 @@ runuser -u linkedinbot --preserve-environment -- bash --noprofile --norc -lc '
 
 ### Recommended prompt editing rules
 
-In the prompt, explicitly define:
+In the prompt, explicitly define -->
 
 - who is speaking
 - the tone
